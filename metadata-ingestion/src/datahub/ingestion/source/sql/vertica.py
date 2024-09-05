@@ -150,6 +150,7 @@ class VerticaSource(SQLAlchemySource):
             )
 
             for schema in self.get_allowed_schemas(inspector, db_name):
+                schema=schema.lower()
                 self.add_information_for_schema(inspector, schema)
 
                 yield from self.gen_schema_containers(
@@ -178,11 +179,11 @@ class VerticaSource(SQLAlchemySource):
     def get_identifier(
         self, *, schema: str, entity: str, inspector: VerticaInspector, **kwargs: Any
     ) -> str:
-        regular = f"{schema}.{entity}"
+        regular = f"{schema.lower()}.{entity}"
         if self.config.database:
-            return f"{self.config.database}.{regular}"
+            return f"{self.config.database.lower()}.{regular}"
         current_database = self.get_db_name(inspector)
-        return f"{current_database}.{regular}"
+        return f"{current_database.lower()}.{regular}"
 
     def get_database_properties(
         self, inspector: VerticaInspector, database: str
